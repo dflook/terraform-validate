@@ -20,7 +20,8 @@ If the terraform configuration is not valid, the build is failed.
   Path to the terraform configuration
 
   - Type: string
-  - Required
+  - Optional
+  - Default: The action workspace
 
 ## Environment Variables
 
@@ -98,12 +99,6 @@ If the terraform configuration is not valid, the build is failed.
   For example:
   ```yaml
   env:
-    TERRAFORM_PRE_RUN: |
-      # Install latest Azure CLI
-      curl -skL https://aka.ms/InstallAzureCLIDeb | bash
-      
-      # Install postgres client
-      apt-get install -y --no-install-recommends postgresql-client
     TERRAFORM_HTTP_CREDENTIALS: |
       example.com=dflook:${{ secrets.HTTPS_PASSWORD }}
       github.com/dflook/terraform-github-actions.git=dflook-actions:${{ secrets.ACTIONS_PAT }}
