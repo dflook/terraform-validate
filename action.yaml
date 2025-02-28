@@ -4,25 +4,43 @@ author: Daniel Flook
 
 inputs:
   path:
-    description: Path to the Terraform configuration
+    description: The path to the Terraform module to validate
     required: false
-    default: .
+    default: "."
   workspace:
-    description: Name of the workspace to use for the `terraform.workspace` value while validating.
+    description: |
+      Terraform workspace to use for the `terraform.workspace` value while validating. Note that for remote operations in a cloud backend, this is always `default`.
+
+      Also used for discovering the Terraform version to use, if not otherwise specified. 
+      See [dflook/terraform-version](https://github.com/dflook/terraform-github-actions/tree/main/terraform-version#terraform-version-action) for details.
     required: false
-    default: default
+    default: "default"
   backend_config:
-    description: List of backend configs to set, one per line
+    description: |
+      List of Terraform backend config values, one per line.
+      This is used for discovering the Terraform version to use, if not otherwise specified. 
+      See [dflook/terraform-version](https://github.com/dflook/terraform-github-actions/tree/main/terraform-version#terraform-version-action) for details.
     required: false
     default: ""
   backend_config_file:
-    description: Path to a backend config file
+    description: |
+      List of Terraform backend config files to use, one per line.
+      Paths should be relative to the GitHub Actions workspace
+      This is used for discovering the Terraform version to use, if not otherwise specified. 
+      See [dflook/terraform-version](https://github.com/dflook/terraform-github-actions/tree/main/terraform-version#terraform-version-action) for details.
     required: false
     default: ""
 
+outputs:
+  failure-reason:
+    description: |
+      When the job outcome is `failure` because the validation failed, this will be set to 'validate-failed'.
+      If the job fails for any other reason this will not be set.
+      This can be used with the Actions expression syntax to conditionally run a step when the validate fails.
+
 runs:
   using: docker
-  image: docker://danielflook/terraform-github-actions@sha256:43139c747c6d59c3f83bda22afaff9e331fc959ae1e12769fe1b872ecbd8cdd4
+  image: docker://danielflook/terraform-github-actions@sha256:7aef5fd3c9c6b005c5fe0a77b3065e5a2eeed4650993041a54c25013761237f7
   entrypoint: /entrypoints/validate.sh
 
 branding:
